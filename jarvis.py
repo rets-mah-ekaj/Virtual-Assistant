@@ -120,32 +120,51 @@ def downloadSong():
         soup = bs(response, 'html.parser')
         vidID = soup.body.find_all(class_ = 'yt-uix-tile-link')[0]['href']
         link = 'https://www.youtube.com' + vidID
+        #you need to put your directory down here '/your/path/here/%(title)s.%(ext)s '
         system("youtube-dl -x --audio-format mp3 -o '/Users/jakehamster/Desktop/%(title)s.%(ext)s ' " + link)
         speak('Downloaded' + song)
         speak('Shall I play the song?')
         choice = voiceCommand()
         if 'yes' in choice:
-            os.chdir('/users/jakehamster/desktop')
-            files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
-            songPlay(files[-1])
-            os.system('open ' + files[-1])
+            openDownloadedFile()
         elif 'no' in choice:
             speak('As you wish sir!')
     except Exception as e:
         print(e)
         speak('Unable to download the song you requested!')
-'''
-def songPlay(song_name):
+
+def downloadVideo():
+    speak('Please tell me the name of the video!')
+    video = voiceCommand()
+    videourl = '+'.join(song.split())
+    finalurl = 'https://www.youtube.com/results?search_query=' + videourl
+    downloadPath = '~/Movies/'
     try:
-        os.system('open ' + song_name)
-    except Exception as e:
-        print(e)
-        speak('Sorry sir! The song might be in some other directory!')
+        response = urllib.request.urlopen(finalurl).read()
+        soup = bs(response, 'html.parser')
+        vidID = soup.body.find_all(class_ = 'yt-uix-tile-link')[0]['href']
+        link = 'https://www.youtube.com' + vidID
+        #you need to put your directory down here '/your/path/here/%(title)s.%(ext)s '
+        system("youtube-dl -0 '/Users/jakehamster/Desktop/%(title).%(ext)s ' " + link)
+        speak('Downloaded' + song)
+        speak('Shall I play the video?')
         choice = voiceCommand()
         if 'yes' in choice:
-
+            openDownloadedFile()
         elif 'no' in choice:
-'''
+            speak('As you wish sir!')
+    except Exceptionas as e:
+        print(e)
+        speak('Unable to download the video you requested!')
+
+def openDownloadedFile():
+    try:
+        #you need to put your directory down here 'your/directory' where your file gets downloaded usually'
+        os.chdir('/users/jakehamster/desktop')
+        files = sorted(os.listdir(os.getcwd()), key = os.path.getmtime)
+     except Exception as e:
+        print(e)
+        speak('Sorry sir! The file might be in some other directory!')
 
 def shutdownSleepRestart():
     speak('Are you sure to shutdown sir? I can logout or sleep instead!')
@@ -186,20 +205,9 @@ def shutdownSleepRestart():
             except Exception as e:
                 print(e)
                 speak('Sorry sir, My attemp failed! Please do it manually!')
-    elif 'logout' in choice:
-        speak('Shall I shutdown now or delay it?')
-        choice = voiceCommand()
-        if 'now' in choice:
-            os.system('shutdown -h now')
-        else:
-            try:
-                time = ''.join(re.findall('[0-9]+'))
-                os.system('shutdown -h +' + time)
-            except Exception as e:
-                print(e)
-                speak('Sorry sir, My attemp failed! Please do it manually!')
     else:
         speak("Sorry sir, I didn't understand!")
+
 if __name__ == "__main__":
     wishMe()
     while True:
@@ -217,6 +225,8 @@ if __name__ == "__main__":
             searchInternet()
         elif 'download' in query and 'song' in query:
             downloadSong()
+        elif 'download' in query and 'video' in query:
+            downloadVideo()
         elif 'shutdown' in query:
             shutdownSleepRestart()
         elif "go offline" in query:
