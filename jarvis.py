@@ -69,21 +69,20 @@ def searchWiki():
     speak(result)
 
 def mailList(to):
+    #create a database of email ID(s) using if-elif-else. For example:
+    '''
     if 'myself' in to:
-        return 'piyushsrivastava.2422@gmail.com'
+        return 'xyz@gmail.com'
     elif 'dad' in to:
         speak('Should I send the message to office I.D. or personal?')
         to = voiceCommand()
         if 'office' in to:
-            return 'praveen.ks@adityabirla.com'
+            return 'dadoffice@office.com'
         elif 'personal' in to:
-            return 'praveenks1967@gmail.com'
-    elif 'khushi' in to:
-        return 'vanshikastar1234@gmail.com'
-    elif 'magloo' in to:
-        return 'anas9839#gmail.com'
+            return 'dadpersonal@personal.com'
     else:
         return 'Error'
+    '''
 
 def sendEmail(to, content):
     try:
@@ -95,8 +94,9 @@ def sendEmail(to, content):
         server = protocol.SMTP('smtp.gmail.com', 587)
         server.ehlo()
         server.starttls()
-        server.login('myprojectmailbox.2422@gmail.com', 'cemcod-Qyvtuf-0piqta')
-        server.sendmail('myprojectmailbox.2422@gmail.com', to, content)
+        #enter the email ID and password below with which you want to send the emails to recepients
+        server.login('xyz@gmail.com', 'password')
+        server.sendmail('xyz@gmail.com', to, content)
         server.close()
         speak('Email was successfully sent!')
     except Exception as e:
